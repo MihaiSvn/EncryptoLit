@@ -6,11 +6,11 @@ public class EncryptingSentence : MonoBehaviour
 {
     [SerializeField] public static string Sentence = "lifeislikeridingabicycletokeepyourbalanceyoumustkeepmoving";
     //private static int SentenceLength = Sentence.Length;
-    private int[] ASCIICodeArray= new int[256]; 
+    [HideInInspector] public int[] ASCIICodeArray= new int[256]; 
     private int[] FrecvCodesArray= new int[256];
     [HideInInspector] public int[] EncryptedSentence= new int[256];
-    public GameObject Encryption;
-    public TMP_Text EncrpytionText;
+    private GameObject Encryption;
+    private TMP_Text EncrpytionText;
     private void Start()
     {
         for(int i=0 ; i < Sentence.Length ; i++)

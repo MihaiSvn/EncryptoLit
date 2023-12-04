@@ -548,6 +548,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   input: 
   inputField: {fileID: 690476776952605036}
+  inputField2: {fileID: 690476777223925312}
+  Encryption: {fileID: 6168774111504969200}
 --- !u!1 &6168774111504969200
 GameObject:
   m_ObjectHideFlags: 0
