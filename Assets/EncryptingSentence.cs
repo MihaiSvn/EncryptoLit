@@ -2,6 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using System.Runtime.CompilerServices;
+
 public class EncryptingSentence : MonoBehaviour
 {
     [SerializeField] public static string Sentence = "lifeislikeridingabicycletokeepyourbalanceyoumustkeepmoving";
@@ -11,8 +13,10 @@ public class EncryptingSentence : MonoBehaviour
     [HideInInspector] public int[] EncryptedSentence= new int[256];
     private GameObject Encryption;
     private TMP_Text EncrpytionText;
+    [HideInInspector] public int mistakes = 0;
     private void Start()
     {
+
         for(int i=0 ; i < Sentence.Length ; i++)
         {
             if (ASCIICodeArray[Sentence[i]]==0)
