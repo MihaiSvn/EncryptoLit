@@ -14,13 +14,21 @@ public class VerifyLetterInput : MonoBehaviour
     public GameObject Encryption;
     private string EncryptionText;
     [HideInInspector] public float delayTime = 0.3f;
+    private int[] FrecvCodesArray;
+    private int[] EncryptedSentence;
+    private static string Sentence;
+    private EncryptingSentence DelEncr;
 
-    
+
 
     private int[] ASCIICodes = new int[256];
     void Start()
     {
-       
+       FrecvCodesArray = FindObjectOfType<EncryptingSentence>().FrecvCodesArray;
+       EncryptedSentence = FindObjectOfType<EncryptingSentence>().EncryptedSentence;
+       Sentence = EncryptingSentence.Sentence;
+        DelEncr = FindObjectOfType<EncryptingSentence>();
+
     }
 
     // Update is called once per frame
@@ -41,6 +49,10 @@ public class VerifyLetterInput : MonoBehaviour
         if (ASCIICodes[input[0] - 'A' + 'a'] == Encryptionint)
         {
             Debug.Log("Correct");
+            StartCoroutine(RightLetter());
+            DelEncr.DeleteEncryption(Encryptionint);
+            FindObjectOfType<EncryptingSentence>().LettersLeft--;
+
             //what to do if correct
         }
         else
@@ -138,5 +150,18 @@ public class VerifyLetterInput : MonoBehaviour
         inputField2.GetComponent<TMP_InputField>().text = string.Empty;
         
 
-    }      
+    }
+    private IEnumerator RightLetter()
+    {
+        float counter = 0f;
+        float time = delayTime;
+        while(counter<=delayTime)
+        {
+            counter+= Time.deltaTime;
+            inputField.GetComponent<TMP_Text>().color = Color.green;
+            inputField2.GetComponent<TMP_InputField>().interactable = false;
+            yield return null;
+        }
+        inputField.GetComponent<TMP_Text>().color = Color.black;
+    }
 }
