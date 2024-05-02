@@ -4,7 +4,7 @@ using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
 
-public class VerifyLetterInput : MonoBehaviour
+public class UnknownTile : MonoBehaviour
 {
     public string input;
     private char[] InputChar;
@@ -24,9 +24,9 @@ public class VerifyLetterInput : MonoBehaviour
     private int[] ASCIICodes = new int[256];
     void Start()
     {
-       FrecvCodesArray = FindObjectOfType<EncryptingSentence>().FrecvCodesArray;
-       EncryptedSentence = FindObjectOfType<EncryptingSentence>().EncryptedSentence;
-       Sentence = EncryptingSentence.Sentence;
+        FrecvCodesArray = FindObjectOfType<EncryptingSentence>().FrecvCodesArray;
+        EncryptedSentence = FindObjectOfType<EncryptingSentence>().EncryptedSentence;
+        Sentence = EncryptingSentence.Sentence;
         DelEncr = FindObjectOfType<EncryptingSentence>();
 
     }
@@ -41,7 +41,7 @@ public class VerifyLetterInput : MonoBehaviour
         EncryptionText = Encryption.GetComponent<TMP_Text>().text;
         ASCIICodes = FindObjectOfType<EncryptingSentence>().ASCIICodeArray;
         int Encryptionint = int.Parse(EncryptionText);
- 
+
         Debug.Log(Encryptionint);
         Debug.Log(ASCIICodes[input[0] - 'A' + 'a']);
         Debug.Log(input[0]);
@@ -105,7 +105,7 @@ public class VerifyLetterInput : MonoBehaviour
             tempPos.z = defaultPos.z;
             objTransform.position = tempPos;
             objTransform.rotation = defaultRot * Quaternion.AngleAxis(UnityEngine.Random.Range(-angleRot, angleRot), new Vector3(0f, 0f, 1f));
-            
+
             yield return null;
 
             //Check if we have reached the decreasePoint then start decreasing  decreaseSpeed value
@@ -125,14 +125,14 @@ public class VerifyLetterInput : MonoBehaviour
                     decreaseSpeed = Mathf.Lerp(speed, 0, counter / decreasePoint);
                     decreaseAngle = Mathf.Lerp(angleRot, 0, counter / decreasePoint);
 
-                        //Don't Translate the Z Axis if 2D Object
-                        tempPos = defaultPos + UnityEngine.Random.insideUnitSphere * decreaseSpeed;
-                        tempPos.z = defaultPos.z;
-                        objTransform.position = tempPos;
+                    //Don't Translate the Z Axis if 2D Object
+                    tempPos = defaultPos + UnityEngine.Random.insideUnitSphere * decreaseSpeed;
+                    tempPos.z = defaultPos.z;
+                    objTransform.position = tempPos;
 
-                        //Only Rotate the Z axis if 2D
-                        objTransform.rotation = defaultRot * Quaternion.AngleAxis(UnityEngine.Random.Range(-decreaseAngle, decreaseAngle), new Vector3(0f, 0f, 1f));
-                   
+                    //Only Rotate the Z axis if 2D
+                    objTransform.rotation = defaultRot * Quaternion.AngleAxis(UnityEngine.Random.Range(-decreaseAngle, decreaseAngle), new Vector3(0f, 0f, 1f));
+
                     yield return null;
                 }
 
@@ -148,16 +148,16 @@ public class VerifyLetterInput : MonoBehaviour
         inputField2.GetComponent<TMP_InputField>().interactable = true;
         inputField.GetComponent<TMP_Text>().color = Color.black;
         inputField2.GetComponent<TMP_InputField>().text = string.Empty;
-        
+
 
     }
     private IEnumerator RightLetter()
     {
         float counter = 0f;
         float time = delayTime;
-        while(counter<=delayTime)
+        while (counter <= delayTime)
         {
-            counter+= Time.deltaTime;
+            counter += Time.deltaTime;
             inputField.GetComponent<TMP_Text>().color = Color.green;
             inputField2.GetComponent<TMP_InputField>().interactable = false;
             yield return null;

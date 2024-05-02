@@ -199,7 +199,7 @@ GameObject:
   - component: {fileID: 690476777223925372}
   - component: {fileID: 690476777223925375}
   - component: {fileID: 690476777223925374}
-  - component: {fileID: 4645553223610789304}
+  - component: {fileID: 7611805152535335555}
   m_Layer: 5
   m_Name: Unkown Tile
   m_TagString: Untagged
@@ -347,8 +347,8 @@ MonoBehaviour:
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 4645553223610789304}
-        m_TargetAssemblyTypeName: VerifyLetterInput, Assembly-CSharp
+      - m_Target: {fileID: 7611805152535335555}
+        m_TargetAssemblyTypeName: UnknownTile, Assembly-CSharp
         m_MethodName: ReadStringInput
         m_Mode: 0
         m_Arguments:
@@ -377,7 +377,7 @@ MonoBehaviour:
   m_isRichTextEditingAllowed: 0
   m_LineLimit: 0
   m_InputValidator: {fileID: 0}
---- !u!114 &4645553223610789304
+--- !u!114 &7611805152535335555
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}

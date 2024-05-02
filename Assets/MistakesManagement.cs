@@ -11,11 +11,11 @@ public class MistakesManagement : MonoBehaviour
     public GameObject Health;
     private float delayTimeForReset;
     // Start is called before the first frame update
-    void Awake()
+    void Start()
     {
         mistakes= 0;
         LastMistakes= 0;
-        delayTimeForReset = FindObjectOfType<VerifyLetterInput>().delayTime;
+        delayTimeForReset = FindObjectOfType<UnknownTile>().delayTime;
         delayTimeForReset += 0.5f;
     }
 

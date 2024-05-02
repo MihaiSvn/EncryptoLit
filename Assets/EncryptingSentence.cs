@@ -5,11 +5,13 @@ using TMPro;
 using System.Runtime.CompilerServices;
 using JetBrains.Annotations;
 using Unity.VisualScripting.AssemblyQualifiedNameParser;
+using System.Linq;
 
 public class EncryptingSentence : MonoBehaviour
 {
-    public static string Sentence = "lifeislikeridingabicycletokeepyourbalanceyoumustkeepmoving";
+    public static string Sentence = "life is like riding a bicycle to keep your balance you must keep moving";
     //[HideInInspector] public static int SentenceLength = Sentence.Length;
+    public GameObject tilePrefab;
     [HideInInspector] public int[] ASCIICodeArray= new int[256]; 
     [HideInInspector] public int[] FrecvCodesArray= new int[256];
     [HideInInspector] public int[] EncryptedSentence= new int[256];
@@ -19,6 +21,11 @@ public class EncryptingSentence : MonoBehaviour
     private TMP_Text LetterText;
     [HideInInspector] public int mistakes = 0;
     [HideInInspector] public int LettersLeft = Sentence.Length;
+
+    private void Awake()
+    {
+        GenerateTiles(ref Sentence);
+    }
     private void Start()
     {
 
@@ -60,12 +67,26 @@ public class EncryptingSentence : MonoBehaviour
             }
 
         }
-        
-        
+
 
         
        /* for(int i=0; i< Sentence.Length;i++)
         { Debug.Log(EncryptedSentence[i]);}*/
+    }
+
+    private void GenerateTiles(ref string a)
+    {
+        for (int i = 0; i < a.Length; i++)
+        {
+            if (!(a[i] >= 'a' && a[i] <= 'z'))
+            {
+                continue;
+            }
+            GameObject crt = Instantiate(tilePrefab, transform);
+            crt.transform.localPosition = new Vector3((i * 50) % 500, -(i/10)*50, 0);
+          
+        }
+        a = string.Concat(a.Where(c => !char.IsWhiteSpace(c)));
     }
     public void DeleteEncryption(int n)
      {
