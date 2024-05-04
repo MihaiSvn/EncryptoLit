@@ -19,10 +19,9 @@ public class MistakesManagement : MonoBehaviour
         delayTimeForReset += 0.5f;
     }
 
-    // Update is called once per frame
     void Update()
     {
-        if(mistakes != LastMistakes)
+        if(mistakes != LastMistakes)     //since update is called once per frame, LastMistakes is used to check if mistakes changed
         {
             GameObject HealthGameObject = Health.gameObject.transform.GetChild(mistakes - 1).gameObject;
             HealthGameObject.GetComponent<Image>().color = Color.red;
@@ -36,7 +35,7 @@ public class MistakesManagement : MonoBehaviour
             
 
     }
-    private IEnumerator WaitAndReset()
+    private IEnumerator WaitAndReset()   //reset scene if you lose
     {
         yield return new WaitForSeconds(delayTimeForReset);
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);

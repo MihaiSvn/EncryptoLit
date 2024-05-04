@@ -6,75 +6,99 @@ using System.Runtime.CompilerServices;
 using JetBrains.Annotations;
 using Unity.VisualScripting.AssemblyQualifiedNameParser;
 using System.Linq;
+using Unity.VisualScripting.Dependencies.Sqlite;
+using System.Diagnostics.Tracing;
+using System.Text.RegularExpressions;
+using UnityEngine.UIElements;
 
 public class EncryptingSentence : MonoBehaviour
 {
-    public static string Sentence = "life is like riding a bicycle to keep your balance you must keep moving";
-    //[HideInInspector] public static int SentenceLength = Sentence.Length;
-    public GameObject tilePrefab;
-    [HideInInspector] public int[] ASCIICodeArray= new int[256]; 
-    [HideInInspector] public int[] FrecvCodesArray= new int[256];
-    [HideInInspector] public int[] EncryptedSentence= new int[256];
-    private GameObject Encryption;
-    private GameObject Letter;
-    private TMP_Text EncrpytionText;
-    private TMP_Text LetterText;
-    [HideInInspector] public int mistakes = 0;
-    [HideInInspector] public int LettersLeft = Sentence.Length;
+    public GameObject WinScreen; //WinScreen parent
+    public GameObject SentenceScreen;   //SentenceScreen parent
+    [SerializeField] private int Fraction_Words = 5; //the fraction of words given
+    public static string Sentence;   //normal sentence(grabbed from sentence object)
+    private string SentenceWOSpaces;  //sentence without spaces for encryption
+    public GameObject tilePrefab;     //tile prefab for generating letters
+    [HideInInspector] public int[] ASCIICodeArray= new int[256];    //vector that stores each letter's random encryption on the index of their ASCII code
+    [HideInInspector] public int[] FrecvCodesArray= new int[256];   //vector for how many of each encryption there are
+    [HideInInspector] public int[] EncryptedSentence= new int[256];  //vector that holds the sentence as if it was all encrypted
+    private GameObject Encryption;    //object for each encryption object in sentence parent
+    private GameObject Letter;        //object for each letter object in sentence parent
+    private TMP_Text EncrpytionText;  //the actual text field of each encryption
+    private TMP_Text LetterText;      //the actual text field of each letter
+    private TMP_InputField LetterInput;       //input field for each letter
+    [HideInInspector] public int mistakes = 0;   //used for lose condition
+    [HideInInspector] public int LettersLeft;    //used for win condition
 
     private void Awake()
     {
-        GenerateTiles(ref Sentence);
+        //GenerateTiles(ref Sentence);
     }
     private void Start()
     {
-
-        for(int i=0 ; i < Sentence.Length ; i++)
+        Sentence = this.GetComponent<TMP_Text>().text;  //gets the text from the sentence object
+        SentenceWOSpaces = Sentence.Replace(" ", string.Empty);  //removes spaces from sentence
+        LettersLeft = SentenceWOSpaces.Length;     //used for win condition
+        //create encryption for each unique letter
+        for (int i=0 ; i < SentenceWOSpaces.Length ; i++)
         {
-            if (ASCIICodeArray[Sentence[i]] == 0)
+            if (ASCIICodeArray[SentenceWOSpaces[i]] == 0)
             {
                 int nrrand;
                 do
                 {
                     nrrand = Random.Range(1, 27);
                 } while (FrecvCodesArray[nrrand] != 0);
-                ASCIICodeArray[Sentence[i]] = nrrand;
-                EncryptedSentence[i] = ASCIICodeArray[Sentence[i]];
+                ASCIICodeArray[SentenceWOSpaces[i]] = nrrand;
+                EncryptedSentence[i] = ASCIICodeArray[SentenceWOSpaces[i]];
                 FrecvCodesArray[nrrand]++;
 
             }
             else
             {
-                EncryptedSentence[i] = ASCIICodeArray[Sentence[i]];
+                EncryptedSentence[i] = ASCIICodeArray[SentenceWOSpaces[i]];
                 FrecvCodesArray[EncryptedSentence[i]]++;
             }
 
         }
-        for (int i = 0; i < Sentence.Length; i++)
+        //put encryption on screen
+        for (int i = 0; i < SentenceWOSpaces.Length; i++)
         {
             Encryption = this.gameObject.transform.GetChild(i).GetChild(1).gameObject;
             EncrpytionText = Encryption.GetComponent<TMP_Text>();
             EncrpytionText.SetText(EncryptedSentence[i].ToString());
-            //check if the letter is unique on known letters
-            Letter = this.gameObject.transform.GetChild(i).GetChild(0).gameObject;
-            LetterText = Letter.GetComponent<TMP_Text>();
-            if(LetterText!= null)
-            {
-                LettersLeft--;
-                FrecvCodesArray[EncryptedSentence[i]]--;
-                if (FrecvCodesArray[EncryptedSentence[i]] == 0)
-                    Encryption.SetActive(false);
-            }
 
         }
-
-
-        
-       /* for(int i=0; i< Sentence.Length;i++)
-        { Debug.Log(EncryptedSentence[i]);}*/
+        Debug.Log(SentenceWOSpaces.Length);
+        int GivenLetters = (int)Mathf.Round(SentenceWOSpaces.Length / Fraction_Words) + 1;  //how many letters are given
+        Debug.Log(GivenLetters);
+        //put the random letters
+        int[] RandomFrecv = new int[256];
+        int randomgive;
+        while(GivenLetters!=0)
+        {
+            do
+            {
+                randomgive = Random.Range(0, SentenceWOSpaces.Length - 1);
+            } while (RandomFrecv[randomgive] != 0);
+            RandomFrecv[randomgive]++;
+            
+            
+            char RandomLetter = SentenceWOSpaces[randomgive];
+       
+            Letter = this.gameObject.transform.GetChild(randomgive).gameObject;
+            LetterInput = Letter.GetComponent<TMP_InputField>();
+            LetterInput.onValueChanged.SetPersistentListenerState(0, UnityEngine.Events.UnityEventCallState.Off);
+            LetterInput.text = RandomLetter.ToString().ToUpper();
+            LettersLeft--;
+            LetterInput.interactable = false;
+            DeleteEncryption(EncryptedSentence[randomgive]);
+            LetterInput.onValueChanged.SetPersistentListenerState(0, UnityEngine.Events.UnityEventCallState.RuntimeOnly);
+            GivenLetters--;
+        }
     }
 
-    private void GenerateTiles(ref string a)
+    /*private void GenerateTiles(ref string a)
     {
         for (int i = 0; i < a.Length; i++)
         {
@@ -87,13 +111,13 @@ public class EncryptingSentence : MonoBehaviour
           
         }
         a = string.Concat(a.Where(c => !char.IsWhiteSpace(c)));
-    }
-    public void DeleteEncryption(int n)
+    }*/
+    public void DeleteEncryption(int n)    //changes vector for how many of each encryption there are and checks if it should delete the encryption
      {
             FrecvCodesArray[n]--;
             if (FrecvCodesArray[n] == 0)
             {
-                for(int i=0;i<Sentence.Length;i++)
+                for(int i=0;i<SentenceWOSpaces.Length;i++)
                 {
                     Encryption = this.gameObject.transform.GetChild(i).GetChild(1).gameObject;
                     string EncrpytionTextString = Encryption.GetComponent<TMP_Text>().text;
@@ -104,9 +128,14 @@ public class EncryptingSentence : MonoBehaviour
             }
             
      }
-    private void Update()
+    private void Update() 
     {
-        if (LettersLeft == 0)
+        if (LettersLeft == 0)     //win condition
+        {
+            SentenceScreen.SetActive(false);
+            WinScreen.SetActive(true);
             Debug.Log("Good job lil bro");
+        }
+            
     }
 }

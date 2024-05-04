@@ -24,6 +24,7 @@ public class UnknownTile : MonoBehaviour
     private int[] ASCIICodes = new int[256];
     void Start()
     {
+        //find all varaibles from other script
         FrecvCodesArray = FindObjectOfType<EncryptingSentence>().FrecvCodesArray;
         EncryptedSentence = FindObjectOfType<EncryptingSentence>().EncryptedSentence;
         Sentence = EncryptingSentence.Sentence;
@@ -31,8 +32,7 @@ public class UnknownTile : MonoBehaviour
 
     }
 
-    // Update is called once per frame
-    public void ReadStringInput(string s)
+    public void ReadStringInput(string s)  //checking input and if it's correct
     {
         input = s;
 
@@ -48,32 +48,23 @@ public class UnknownTile : MonoBehaviour
 
         if (ASCIICodes[input[0] - 'A' + 'a'] == Encryptionint)
         {
+            //what to do if correct
             Debug.Log("Correct");
             StartCoroutine(RightLetter());
             DelEncr.DeleteEncryption(Encryptionint);
             FindObjectOfType<EncryptingSentence>().LettersLeft--;
-
-            //what to do if correct
         }
         else
         {
+            //what to do if wrong
             Debug.Log("Loser");
             StartCoroutine(WrongLetter());
             FindObjectOfType<MistakesManagement>().mistakes++;
-
-
-
-            //what to do if wrong
+            
         }
 
-
-
-
-
-
-
     }
-    private IEnumerator WrongLetter()
+    private IEnumerator WrongLetter()     //animation for wrong letter
     {
         float counter = 0f;
         float time = delayTime;
@@ -151,7 +142,7 @@ public class UnknownTile : MonoBehaviour
 
 
     }
-    private IEnumerator RightLetter()
+    private IEnumerator RightLetter()   //animation for right letter
     {
         float counter = 0f;
         float time = delayTime;
