@@ -15,7 +15,7 @@ public class EncryptingSentence : MonoBehaviour
 {
     public GameObject WinScreen; //WinScreen parent
     public GameObject SentenceScreen;   //SentenceScreen parent
-    [SerializeField] private int Fraction_Words = 5; //the fraction of words given
+    [SerializeField] private float Fraction_Words = 5; //the fraction of words given
     public static string Sentence;   //normal sentence(grabbed from sentence object)
     private string SentenceWOSpaces;  //sentence without spaces for encryption
     public GameObject tilePrefab;     //tile prefab for generating letters
@@ -29,13 +29,21 @@ public class EncryptingSentence : MonoBehaviour
     private TMP_InputField LetterInput;       //input field for each letter
     [HideInInspector] public int mistakes = 0;   //used for lose condition
     [HideInInspector] public int LettersLeft;    //used for win condition
+    public GameObject Notebook;
+    private SpriteRenderer NotebookSprite;
 
+    [HideInInspector] public bool FadeBool = false;   //used for fade in animation on win condition
     private void Awake()
     {
+        Sentence = this.GetComponent<TMP_Text>().text;  //gets the text from the sentence object
         //GenerateTiles(ref Sentence);
     }
     private void Start()
     {
+        NotebookSprite = Notebook.GetComponent<SpriteRenderer>();
+        
+        Color tmp = Notebook.GetComponent<SpriteRenderer>().color;
+        tmp.a = 0f;
         Sentence = this.GetComponent<TMP_Text>().text;  //gets the text from the sentence object
         SentenceWOSpaces = Sentence.Replace(" ", string.Empty);  //removes spaces from sentence
         LettersLeft = SentenceWOSpaces.Length;     //used for win condition
@@ -69,7 +77,7 @@ public class EncryptingSentence : MonoBehaviour
             EncrpytionText.SetText(EncryptedSentence[i].ToString());
 
         }
-        Debug.Log(SentenceWOSpaces.Length);
+        Debug.Log(SentenceWOSpaces.Length);    
         int GivenLetters = (int)Mathf.Round(SentenceWOSpaces.Length / Fraction_Words) + 1;  //how many letters are given
         Debug.Log(GivenLetters);
         //put the random letters
@@ -98,7 +106,7 @@ public class EncryptingSentence : MonoBehaviour
         }
     }
 
-    /*private void GenerateTiles(ref string a)
+    private void GenerateTiles(ref string a)
     {
         for (int i = 0; i < a.Length; i++)
         {
@@ -111,7 +119,7 @@ public class EncryptingSentence : MonoBehaviour
           
         }
         a = string.Concat(a.Where(c => !char.IsWhiteSpace(c)));
-    }*/
+    }
     public void DeleteEncryption(int n)    //changes vector for how many of each encryption there are and checks if it should delete the encryption
      {
             FrecvCodesArray[n]--;
@@ -132,10 +140,14 @@ public class EncryptingSentence : MonoBehaviour
     {
         if (LettersLeft == 0)     //win condition
         {
-            SentenceScreen.SetActive(false);
-            WinScreen.SetActive(true);
+            FadeBool = true;   //change used for fade in scripts
+            for(int i=0;i <= SentenceWOSpaces.Length;i++)     //disable all letters, commas, dots and health
+                this.gameObject.transform.GetChild(i).gameObject.SetActive(false);
+            
             Debug.Log("Good job lil bro");
         }
             
     }
+
+    
 }
