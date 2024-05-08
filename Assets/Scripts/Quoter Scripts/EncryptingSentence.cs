@@ -29,8 +29,8 @@ public class EncryptingSentence : MonoBehaviour
     private TMP_InputField LetterInput;       //input field for each letter
     [HideInInspector] public int mistakes = 0;   //used for lose condition
     [HideInInspector] public int LettersLeft;    //used for win condition
-    public GameObject Notebook;
-    private SpriteRenderer NotebookSprite;
+    public GameObject Button;
+    public GameObject ButtonPosWin;
 
     [HideInInspector] public bool FadeBool = false;   //used for fade in animation on win condition
     private void Awake()
@@ -40,10 +40,7 @@ public class EncryptingSentence : MonoBehaviour
     }
     private void Start()
     {
-        NotebookSprite = Notebook.GetComponent<SpriteRenderer>();
-        
-        Color tmp = Notebook.GetComponent<SpriteRenderer>().color;
-        tmp.a = 0f;
+      
         Sentence = this.GetComponent<TMP_Text>().text;  //gets the text from the sentence object
         SentenceWOSpaces = Sentence.Replace(" ", string.Empty);  //removes spaces from sentence
         LettersLeft = SentenceWOSpaces.Length;     //used for win condition
@@ -141,8 +138,11 @@ public class EncryptingSentence : MonoBehaviour
         if (LettersLeft == 0)     //win condition
         {
             FadeBool = true;   //change used for fade in scripts
+            Vector3 NewButtonPos = new Vector3(-699f, 401f, 0f);
+            Button.gameObject.transform.position = ButtonPosWin.gameObject.transform.position;
             for(int i=0;i <= SentenceWOSpaces.Length;i++)     //disable all letters, commas, dots and health
                 this.gameObject.transform.GetChild(i).gameObject.SetActive(false);
+
             
             Debug.Log("Good job lil bro");
         }
