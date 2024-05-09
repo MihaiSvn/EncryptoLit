@@ -1455,6 +1455,8 @@ MonoBehaviour:
   LettersLeft: 0
   Button: {fileID: 790742334}
   ButtonPosWin: {fileID: 1076007281}
+  GenerateTilesBool: 0
+  RandomLetterBool: 1
   FadeBool: 0
 --- !u!1 &281484022
 GameObject:

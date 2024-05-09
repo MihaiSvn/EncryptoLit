@@ -12,6 +12,6 @@ EditorBuildSettings:
     path: Assets/Scenes/DifGuesser.unity
     guid: d0d479fc2ecec444a8d51a6f440602c4
   - enabled: 1
-    path: Assets/Scenes/Quoter.unity
+    path: Assets/Scenes/Quoter10.unity
     guid: 84d1be049ea7a244787f0daa9f120c5e
   m_configObjects: {}

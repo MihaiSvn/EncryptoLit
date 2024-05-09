@@ -31,12 +31,16 @@ public class EncryptingSentence : MonoBehaviour
     [HideInInspector] public int LettersLeft;    //used for win condition
     public GameObject Button;
     public GameObject ButtonPosWin;
+    public bool GenerateTilesBool = true;
+    public bool RandomLetterBool = false;
+    private bool ButtonPos = true;
 
     [HideInInspector] public bool FadeBool = false;   //used for fade in animation on win condition
     private void Awake()
     {
         Sentence = this.GetComponent<TMP_Text>().text;  //gets the text from the sentence object
-        //GenerateTiles(ref Sentence);
+        if(GenerateTilesBool)
+            GenerateTiles(ref Sentence);
     }
     private void Start()
     {
@@ -77,30 +81,34 @@ public class EncryptingSentence : MonoBehaviour
         Debug.Log(SentenceWOSpaces.Length);    
         int GivenLetters = (int)Mathf.Round(SentenceWOSpaces.Length / Fraction_Words) + 1;  //how many letters are given
         Debug.Log(GivenLetters);
-        //put the random letters
-        int[] RandomFrecv = new int[256];
-        int randomgive;
-        while(GivenLetters!=0)
+        if(RandomLetterBool)
         {
-            do
+            //put the random letters
+            int[] RandomFrecv = new int[256];
+            int randomgive;
+            while(GivenLetters!=0)
             {
-                randomgive = Random.Range(0, SentenceWOSpaces.Length - 1);
-            } while (RandomFrecv[randomgive] != 0);
-            RandomFrecv[randomgive]++;
+                do
+                {
+                    randomgive = Random.Range(0, SentenceWOSpaces.Length - 1);
+                } while (RandomFrecv[randomgive] != 0);
+                RandomFrecv[randomgive]++;
             
             
-            char RandomLetter = SentenceWOSpaces[randomgive];
+                char RandomLetter = SentenceWOSpaces[randomgive];
        
-            Letter = this.gameObject.transform.GetChild(randomgive).gameObject;
-            LetterInput = Letter.GetComponent<TMP_InputField>();
-            LetterInput.onValueChanged.SetPersistentListenerState(0, UnityEngine.Events.UnityEventCallState.Off);
-            LetterInput.text = RandomLetter.ToString().ToUpper();
-            LettersLeft--;
-            LetterInput.interactable = false;
-            DeleteEncryption(EncryptedSentence[randomgive]);
-            LetterInput.onValueChanged.SetPersistentListenerState(0, UnityEngine.Events.UnityEventCallState.RuntimeOnly);
-            GivenLetters--;
+                Letter = this.gameObject.transform.GetChild(randomgive).gameObject;
+                LetterInput = Letter.GetComponent<TMP_InputField>();
+                LetterInput.onValueChanged.SetPersistentListenerState(0, UnityEngine.Events.UnityEventCallState.Off);
+                LetterInput.text = RandomLetter.ToString().ToUpper();
+                LettersLeft--;
+                LetterInput.interactable = false;
+                DeleteEncryption(EncryptedSentence[randomgive]);
+                LetterInput.onValueChanged.SetPersistentListenerState(0, UnityEngine.Events.UnityEventCallState.RuntimeOnly);
+                GivenLetters--;
+            }
         }
+       
     }
 
     private void GenerateTiles(ref string a)
@@ -112,7 +120,7 @@ public class EncryptingSentence : MonoBehaviour
                 continue;
             }
             GameObject crt = Instantiate(tilePrefab, transform);
-            crt.transform.localPosition = new Vector3((i * 50) % 500, -(i/10)*50, 0);
+            crt.transform.localPosition = new Vector3((i * 50), 0, 0);
           
         }
         a = string.Concat(a.Where(c => !char.IsWhiteSpace(c)));
@@ -139,7 +147,12 @@ public class EncryptingSentence : MonoBehaviour
         {
             FadeBool = true;   //change used for fade in scripts
             Vector3 NewButtonPos = new Vector3(-699f, 401f, 0f);
-            Button.gameObject.transform.position = ButtonPosWin.gameObject.transform.position;
+            if (ButtonPos)
+            {
+                Button.gameObject.transform.position = ButtonPosWin.gameObject.transform.position;
+                ButtonPos = false;
+            }
+            
             for(int i=0;i <= SentenceWOSpaces.Length;i++)     //disable all letters, commas, dots and health
                 this.gameObject.transform.GetChild(i).gameObject.SetActive(false);
 
