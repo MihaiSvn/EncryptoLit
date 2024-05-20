@@ -6,17 +6,13 @@ using UnityEngine.SceneManagement;
 using UnityEngine.UIElements;
 public class LevelLoad : MonoBehaviour
 {
-    private TextMeshPro Level;
-    private TMP_Text LevelText;
-    private string LevelString;
+    private string Level;
     [SerializeField] private int LevelID;
  
     public void Start()
     {
-        Level = this.gameObject.transform.GetChild(0).gameObject.GetComponent<TextMeshPro>();
-        LevelText = Level.GetComponent<TMP_Text>();
-        LevelString = LevelText.text;
-        LevelID = int.Parse(LevelString);
+        Level = this.gameObject.transform.GetChild(0).gameObject.GetComponent<TMP_Text>().text;
+        LevelID = int.Parse(Level);
     }
     public void LoadLevel()
     {

@@ -6,7 +6,6 @@ using System.Runtime.CompilerServices;
 using JetBrains.Annotations;
 using Unity.VisualScripting.AssemblyQualifiedNameParser;
 using System.Linq;
-using Unity.VisualScripting.Dependencies.Sqlite;
 using System.Diagnostics.Tracing;
 using System.Text.RegularExpressions;
 using UnityEngine.UIElements;
@@ -33,9 +32,10 @@ public class EncryptingSentence : MonoBehaviour
     public GameObject ButtonPosWin;
     public bool GenerateTilesBool = true;
     public bool RandomLetterBool = false;
-    private bool ButtonPos = true;
+    private bool Done = true;
 
     [HideInInspector] public bool FadeBool = false;   //used for fade in animation on win condition
+     public int LevelsCompleted = 0;     //used for displaying how many levels you completed on main menu
     private void Awake()
     {
         Sentence = this.GetComponent<TMP_Text>().text;  //gets the text from the sentence object
@@ -48,7 +48,7 @@ public class EncryptingSentence : MonoBehaviour
         Sentence = this.GetComponent<TMP_Text>().text;  //gets the text from the sentence object
         SentenceWOSpaces = Sentence.Replace(" ", string.Empty);  //removes spaces from sentence
         LettersLeft = SentenceWOSpaces.Length;     //used for win condition
-        //create encryption for each unique letter
+        //create encryption for each letter
         for (int i=0 ; i < SentenceWOSpaces.Length ; i++)
         {
             if (ASCIICodeArray[SentenceWOSpaces[i]] == 0)
@@ -78,9 +78,9 @@ public class EncryptingSentence : MonoBehaviour
             EncrpytionText.SetText(EncryptedSentence[i].ToString());
 
         }
-        Debug.Log(SentenceWOSpaces.Length);    
+        //Debug.Log(SentenceWOSpaces.Length);    
         int GivenLetters = (int)Mathf.Round(SentenceWOSpaces.Length / Fraction_Words) + 1;  //how many letters are given
-        Debug.Log(GivenLetters);
+        //Debug.Log(GivenLetters);
         if(RandomLetterBool)
         {
             //put the random letters
@@ -146,18 +146,19 @@ public class EncryptingSentence : MonoBehaviour
         if (LettersLeft == 0)     //win condition
         {
             FadeBool = true;   //change used for fade in scripts
-            Vector3 NewButtonPos = new Vector3(-699f, 401f, 0f);
-            if (ButtonPos)
+            if (Done)
             {
+                LevelsCompleted++;
                 Button.gameObject.transform.position = ButtonPosWin.gameObject.transform.position;
-                ButtonPos = false;
+                for (int i = 0; i <= SentenceWOSpaces.Length; i++)     //disable all letters, commas, dots and health
+                    this.gameObject.transform.GetChild(i).gameObject.SetActive(false);
+                Done = false;
             }
             
-            for(int i=0;i <= SentenceWOSpaces.Length;i++)     //disable all letters, commas, dots and health
-                this.gameObject.transform.GetChild(i).gameObject.SetActive(false);
+            
 
             
-            Debug.Log("Good job lil bro");
+            //Debug.Log("Good job lil bro");
         }
             
     }

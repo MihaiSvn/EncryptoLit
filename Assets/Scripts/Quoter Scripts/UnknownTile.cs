@@ -36,20 +36,20 @@ public class UnknownTile : MonoBehaviour
     {
         input = s;
 
-        Debug.Log(input);
+        //Debug.Log(input);
 
         EncryptionText = Encryption.GetComponent<TMP_Text>().text;
         ASCIICodes = FindObjectOfType<EncryptingSentence>().ASCIICodeArray;
         int Encryptionint = int.Parse(EncryptionText);
 
-        Debug.Log(Encryptionint);
+        /*Debug.Log(Encryptionint);
         Debug.Log(ASCIICodes[input[0] - 'A' + 'a']);
-        Debug.Log(input[0]);
+        Debug.Log(input[0]);*/
 
         if (ASCIICodes[input[0] - 'A' + 'a'] == Encryptionint)
         {
             //what to do if correct
-            Debug.Log("Correct");
+            //Debug.Log("Correct");
             StartCoroutine(RightLetter());
             DelEncr.DeleteEncryption(Encryptionint);
             FindObjectOfType<EncryptingSentence>().LettersLeft--;
@@ -57,7 +57,7 @@ public class UnknownTile : MonoBehaviour
         else
         {
             //what to do if wrong
-            Debug.Log("Loser");
+            //Debug.Log("Loser");
             StartCoroutine(WrongLetter());
             FindObjectOfType<MistakesManagement>().mistakes++;
             
@@ -104,7 +104,7 @@ public class UnknownTile : MonoBehaviour
             float decreasePoint = 3f;
             if (counter >= decreasePoint)
             {
-                Debug.Log("Decreasing shake");
+                //Debug.Log("Decreasing shake");
 
                 //Reset counter to 0 
                 counter = 0f;
